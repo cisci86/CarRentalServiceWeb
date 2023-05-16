@@ -1,6 +1,6 @@
 export class RentalStartVM {
     vehicleLicensePlateNumber: string;
-    rentalStart: Date;
+    rentalStartTime: Date;
     customerNumber: string;
     startMileage: number;
 }

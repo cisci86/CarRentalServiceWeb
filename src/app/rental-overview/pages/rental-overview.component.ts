@@ -17,12 +17,6 @@ export class RentalOverviewComponent implements OnInit {
 
 
     ngOnInit(): void {
-       this.vehicleService.getByType("Kombi").subscribe(
-        (res) => {
-            this.vehicels = res;
-            console.log(this.vehicels)
-        }
-       );
        
     }
 }
