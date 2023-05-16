@@ -5,23 +5,26 @@
     <div *ngIf="!rentalStartComplete">
         <h3>Vilken typ av fordon ska hyras ut?</h3>
         <form [formGroup]="form" (ngSubmit)="getVehicles()">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" value="Småbil" name="vehicleType" id="Småbil"
-                    formControlName="vehicleType">
-                <label class="form-check-label" for="Småbil">Småbil</label>
+            <div class="col-5">
+                <div class="input-group">
+                    <div class="input-group-text">
+                        <input class="form-check-input" type="radio" value="Småbil" name="vehicleType" id="Småbil"
+                            formControlName="vehicleType">
+                    </div>
+                    <label class="form-check-label form-control" for="Småbil">Småbil</label>
+                    <div class="input-group-text">
+                        <input class="form-check-input" type="radio" value="Kombi" name="vehicleType" id="Kombi"
+                            formControlName="vehicleType">
+                    </div>
+                    <label class="form-check-label form-control" for="Kombi">Kombi</label>
+                    <div class="input-group-text">
+                        <input class="form-check-input" type="radio" name="vehicleType" id="Lastbil" value="Lastbil"
+                            formControlName="vehicleType">
+                    </div>
+                    <label class="form-check-label form-control" for="Lastbil">Lastbil</label>
+                    <button class="btn btn-secondary" type="submit">Hämta fordon</button>
+                </div>
             </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" value="Kombi" name="vehicleType" id="Kombi"
-                    formControlName="vehicleType">
-                <label class="form-check-label" for="Kombi">Kombi</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="vehicleType" id="Lastbil" value="Lastbil"
-                    formControlName="vehicleType">
-                <label class="form-check-label" for="Lastbil">Lastbil</label>
-            </div>
-
-            <button class="btn btn-primary" type="submit">Hämta fordon</button>
         </form>
     </div>
 
@@ -30,10 +33,10 @@
         <h3>Välj fordon att hyra ut</h3>
         <div class="col-6">
             <div class="input-group">
-                <span class="input-group-text">Registreringsnummer:</span>
-                <select class="form-select" [(ngModel)]="selectedVehicle" name="selectVehicle" #selectVehicle="ngModel"
-                    placeholder="d.ff">
-                    <option value="null" disabled selected hidden>Välj registreringsnummer</option>
+                <span class="input-group-text"
+                    [ngClass]="licensPlate.errors?.['required'] ? 'text-danger': ''">Registreringsnummer*</span>
+                <select class="form-select" [(ngModel)]="selectedVehicle" required #licensPlate="ngModel">
+                    <option [ngValue]="undefined" hidden>Välj registreringsnummer</option>
                     <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle" [disabled]="!vehicle.available">
                         {{vehicle.licensePlateNumber}}</option>
                 </select>
@@ -44,17 +47,20 @@
             <h3 class="col-12">Uppgifter om fordonet</h3>
             <div class="col-6">
                 <div class="input-group mb-3">
-                    <span for="mileage" class="input-group-text">Mätarställning vid start:</span>
+                    <span for="mileage" class="input-group-text"
+                        [ngClass]="startMileage.errors?.['required'] ? 'text-danger' : ''">Mätarställning vid
+                        start*</span>
                     <input type="number" name="mileage" id="mileage" [(ngModel)]="newRental.startMileage"
-                        class="form-control">
+                        class="form-control" #startMileage="ngModel" required>
                     <span class="input-group-text">m</span>
                 </div>
             </div>
             <div class="col-6">
                 <div class="input-group mb-3">
-                    <span class="input-group-text">Uthyrningsstart:</span>
+                    <span class="input-group-text"
+                        [ngClass]="startTime.errors?.['required'] ? 'text-danger' : ''">Uthyrningsstart*</span>
                     <input type="datetime-local" name="rentalStart" id="rentalStart" class="form-control"
-                        [(ngModel)]="newRental.rentalStartTime">
+                        [(ngModel)]="newRental.rentalStartTime" required #startTime="ngModel">
                 </div>
             </div>
         </div>
@@ -63,18 +69,27 @@
             <h3 class="col-12">Uppgifter om kunden</h3>
             <div class="col-6">
                 <div class="input-group">
-                    <span class="input-group-text">Personnummer:</span>
-                    <input type="text" class="form-control" [(ngModel)]="newRental.customerNumber">
+                    <span class="input-group-text"
+                        [ngClass]="customerNumber.errors?.['required'] ? 'text-danger' : ''">Personnummer*</span>
+                    <input type="text" class="form-control" [(ngModel)]="newRental.customerNumber" required=""
+                        #customerNumber="ngModel">
                 </div>
             </div>
         </div>
 
         <div class="mt-4">
-            <button class="btn btn-primary" (click)="startRental()">Starta uthyrning</button>
+            <button class="btn btn-primary" (click)="startRental()"
+                [disabled]="licensPlate.errors || customerNumber.errors || startMileage.errors || startTime.errors">
+                Starta uthyrning</button>
         </div>
     </div>
     <div *ngIf="rentalStartComplete">
         <h3>Uthyrningen av {{newRental.vehicleLicensePlateNumber}} har startat</h3>
-        <h4>Kundens bookningsnummer är {{bookingnumber}}</h4>
+        <div class="col-7">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text">Kundens bookningsnummer är</span>
+                <input class="form-control" type="text" value="{{bookingnumber}}">
+            </div>
+        </div>
     </div>
 </fieldset>
