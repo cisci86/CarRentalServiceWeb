@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { StartRentalComponent } from './rental-overview/components/start-rental/start-rental.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EndRentalComponent } from './rental-overview/components/end-rental/end-rental.component';
 
 export function getBaseUrl() {
   return environment.baseUrl;
@@ -18,7 +19,8 @@ export function getBaseUrl() {
   declarations: [
     AppComponent,
     RentalOverviewComponent,
-    StartRentalComponent
+    StartRentalComponent,
+    EndRentalComponent
   ],
   imports: [
     BrowserModule,

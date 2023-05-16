@@ -1,0 +1,77 @@
+<fieldset>
+    <legend>
+        <h2>Avsluta uthyrning</h2>
+    </legend>
+    <div class="row" *ngIf="!rentalEndComplete">
+        <div class="col-6">
+            <div class="input-group">
+                <span class="input-group-text">Registreringsnummer:</span>
+                <select class="form-select" [(ngModel)]="selectedRental">
+                    <option [ngValue]="undefined" hidden>Välj fordon som ska lämnas tillbaka</option>
+                    <option *ngFor="let rental of activeRentals" [ngValue]="rental">{{rental.vehicleLicensePlateNumber}}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="selectedRental && !rentalEndComplete">
+        <div class="row">
+            <div class="col-6">
+                <div class="input-group mt-3">
+                    <span class="input-group-text">Bokningsnummer:</span>
+                    <input class="form-control" type="text" value="{{selectedRental.bookingNumber}}">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="input-group mt-3">
+                    <span class="input-group-text">Personnummer</span>
+                    <input type="text" class="form-control" value="{{selectedRental.customerNumber}}">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="input-group mt-3">
+                    <span class="input-group-text" [ngClass]="rentalEndTime.errors?.['required'] ? 'text-danger' : ''">
+                        Återlämningstid*</span>
+                    <input class="form-control" id="rentalEndTime" type="datetime-local" #rentalEndTime="ngModel"
+                        [(ngModel)]="rentalEndInfo.rentalEndTime" required min="{{selectedRental.rentalStartTime}}">
+                    <span class="input-group-text">
+                        Starttid: {{selectedRental.rentalStartTime | date: "yyyy-MM-dd HH:mm"}}
+                    </span>
+                </div>
+                <span *ngIf="!endDateValid" class="text-danger">Inlämningsdatumet måste vara senare än uthyrningsdatumet</span>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="input-group mt-3">
+                    <span class="input-group-text"
+                        [ngClass]="endMileage.errors?.['required'] ? 'text-danger' : ''">Mätarställning
+                        vid
+                        återlämning*</span>
+                    <input type="number" id="endMileage" class="form-control" #endMileage="ngModel" required
+                        [(ngModel)]="rentalEndInfo.endMileage" min="{{selectedRental.startMileage + 1}}">
+                    <span class="input-group-text">Mätarställning vid start: {{selectedRental.startMileage}}</span>
+                </div>
+                <span *ngIf="endMileage.errors?.['min']" class="text-danger">Återlämnings
+                    mätarställningen måste
+                    vara högre än den var vid uthyrningen!</span>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button class="btn btn-primary" (click)="endRental()" [disabled]="endMileage.errors || rentalEndTime.errors">Avsluta
+                uthyrningen</button>
+        </div>
+    </div>
+    <div *ngIf="rentalEndComplete">
+        <div>
+            <h4>Uthyrninge är nu avslutad!</h4>
+            <div class="input-group input-group-lg">
+                <span class="input-group-text">Totalt pris för uthyrningen:</span>
+                <input type="text" class="form-control" value="{{totalRentalPrice}}kr">
+            </div>
+        </div>
+    </div>
+</fieldset>
