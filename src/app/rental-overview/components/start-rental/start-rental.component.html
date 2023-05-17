@@ -3,7 +3,7 @@
         <h2>Starta uthyrning</h2>
     </legend>
     <div *ngIf="!rentalStartComplete">
-        <h3>Vilken typ av fordon ska hyras ut?</h3>
+        <h4>Vilken typ av fordon ska hyras ut?</h4>
         <form [formGroup]="form" (ngSubmit)="getVehicles()">
             <div class="col-5">
                 <div class="input-group">
@@ -30,28 +30,31 @@
 
     <div *ngIf="vehicles && !rentalStartComplete" class="mt-4">
 
-        <h3>Välj fordon att hyra ut</h3>
-        <div class="col-6">
-            <div class="input-group">
-                <span class="input-group-text"
-                    [ngClass]="licensPlate.errors?.['required'] ? 'text-danger': ''">Registreringsnummer*</span>
-                <select class="form-select" [(ngModel)]="selectedVehicle" required #licensPlate="ngModel">
-                    <option [ngValue]="undefined" hidden>Välj registreringsnummer</option>
-                    <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle" [disabled]="!vehicle.available">
-                        {{vehicle.licensePlateNumber}}</option>
-                </select>
+        <h4>Välj fordon att hyra ut</h4>
+        <div class="row">
+            <div class="col-6">
+                <div class="input-group">
+                    <span class="input-group-text"
+                        [ngClass]="licensPlate.errors?.['required'] ? 'text-danger' : ''">Registreringsnummer*</span>
+                    <select class="form-select" [(ngModel)]="selectedVehicle" required #licensPlate="ngModel">
+                        <option [ngValue]="undefined" hidden>Välj registreringsnummer</option>
+                        <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle" [disabled]="!vehicle.available"
+                            [ngClass]="vehicle.available ? 'fw-bold' : 'fst-italic fw-lighter text-secondary'">
+                            {{vehicle.licensePlateNumber}}</option>
+                    </select>
+                </div>
             </div>
         </div>
 
         <div class="row mt-3">
-            <h3 class="col-12">Uppgifter om fordonet</h3>
+            <h4 class="col-12">Uppgifter om fordonet</h4>
             <div class="col-6">
                 <div class="input-group mb-3">
                     <span for="mileage" class="input-group-text"
                         [ngClass]="startMileage.errors?.['required'] ? 'text-danger' : ''">Mätarställning vid
                         start*</span>
                     <input type="number" name="mileage" id="mileage" [(ngModel)]="newRental.startMileage"
-                        class="form-control" #startMileage="ngModel" required>
+                        class="form-control" #startMileage="ngModel" required min="0">
                     <span class="input-group-text">m</span>
                 </div>
             </div>
@@ -66,7 +69,7 @@
         </div>
 
         <div class="row">
-            <h3 class="col-12">Uppgifter om kunden</h3>
+            <h4 class="col-12">Uppgifter om kunden</h4>
             <div class="col-6">
                 <div class="input-group">
                     <span class="input-group-text"
@@ -78,7 +81,7 @@
         </div>
 
         <div class="mt-4">
-            <button class="btn btn-primary" (click)="startRental()"
+            <button class="btn btn-secondary" (click)="startRental()"
                 [disabled]="licensPlate.errors || customerNumber.errors || startMileage.errors || startTime.errors">
                 Starta uthyrning</button>
         </div>

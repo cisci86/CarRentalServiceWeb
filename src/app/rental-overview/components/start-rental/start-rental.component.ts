@@ -12,9 +12,9 @@ import { RentalService } from "../../services/rental.service";
 })
 export class StartRentalComponent {
 
-    vehicles: Vehicle[];
+    vehicles: Array<Vehicle>;
     newRental: RentalStartVM = new RentalStartVM();
-    selectedVehicle: Vehicle = new Vehicle();
+    selectedVehicle: Vehicle;
     bookingnumber: string;
     rentalStartComplete: boolean;
 
@@ -29,6 +29,8 @@ export class StartRentalComponent {
     })
 
     getVehicles(){
+        //to show for the user that somthing happends when you get another typ of vehicles. the ui flicks.
+        this.vehicles = undefined;
         //collects all vihecles from the db
         this.vechicleService.getByType(this.form.value.vehicleType).subscribe((res) => {
             this.vehicles = res;
@@ -37,7 +39,7 @@ export class StartRentalComponent {
 
     startRental(){
         this.newRental.vehicleLicensePlateNumber =  this.selectedVehicle.licensePlateNumber;
-        
+
         //sends rentalStartVM to server to start rental. Gets bookingnumber in return
         this.rentalService.startRental(this.newRental).subscribe((bookingnr) => {
             this.bookingnumber = bookingnr.bookingnumber;
